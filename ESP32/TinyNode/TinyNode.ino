@@ -49,7 +49,7 @@ const int outputs[] = { 5, 18, 19, 23 };
 const int inputs[] = { 25, 26, 32, 33 };
 
 int lastBounceTime = 0;
-const int debouncePeriod = 100;
+const int debouncePeriod = 200;
 
 Preferences preferences;
 
