@@ -106,7 +106,7 @@ void printLcdMessage(String line1, String line2) {
 
 void setupMode() {
   Serial.println("Welcome to setup mode!");
-  printLcdMessage("Setup Mode", "-> TinyNode");
+  printLcdMessage("Setup Mode", "192.168.1.1");
   WiFi.softAP("TinyNode", "123456789");
   WiFi.softAPConfig(local_ip, gateway, subnet);
 
@@ -147,9 +147,10 @@ void businessAsUsual(String ssid, String password) {
   Serial.println(WiFi.localIP());
   printLcdMessage("WiFi Connected!", WiFi.localIP().toString());
 
+  server.on("/mac", HTTP_GET, handle_mac_address_route);
   server.on("/detect", HTTP_GET, handle_detect_route);
-  server.on("/toggle-switch", HTTP_GET, handle_switch_toggle_route);
-  server.on("/set-switch", HTTP_GET, handle_switch_set_route);
+  server.on("/toggle", HTTP_GET, handle_switch_toggle_route);
+  server.on("/set", HTTP_GET, handle_switch_set_route);
   server.on("/status", HTTP_GET, handle_switch_state_route);
   server.on("/all-on", HTTP_GET, handle_all_on_route);
   server.on("/all-off", HTTP_GET, handle_all_off_route);
@@ -186,6 +187,10 @@ void updateAll(bool state) {
   for (int i = 0; i < 4; i++) {
     digitalWrite(outputs[i], state);
   }
+}
+
+void handle_mac_address_route(AsyncWebServerRequest *request) {
+   request->send(200, "text/html", WiFi.macAddress());
 }
 
 void handle_switch_toggle_route(AsyncWebServerRequest *request) {
